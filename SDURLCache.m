@@ -612,7 +612,10 @@ static dispatch_queue_t get_disk_io_queue() {
         // start timer for cleanup (rely on fact that dispatch_suspend syncs with disk cache queue)
         if (_timerPaused) {
             _timerPaused = NO;
-            dispatch_resume([self maintenanceTimer]);
+            dispatch_source_t timer = [self maintenanceTimer];
+            if (timer) {
+                dispatch_resume([self maintenanceTimer]);
+            }
         }
     });
 }
